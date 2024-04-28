@@ -71,4 +71,3 @@ def update_city(city_id):
     obj.name = data.get("name", obj.name)
     obj.save()
     return jsonify(obj.to_dict()), 200
-
