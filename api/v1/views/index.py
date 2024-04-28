@@ -23,9 +23,8 @@ def returnstuff():
 @app_views.route('/stats', strict_slashes=False)
 def stuff():
     '''JSON Responses'''
-    types = {'states': State, 'users': User,
-            'amenities': Amenity, 'cities': City,
-            'places': Place, 'reviews': Review}
+    types = {'states': State, 'users': User, 'amenities': Amenity,
+             'cities': City, 'places': Place, 'reviews': Review}
     for key in types:
         types[key] = storage.count(types[key])
     return jsonify(types)
