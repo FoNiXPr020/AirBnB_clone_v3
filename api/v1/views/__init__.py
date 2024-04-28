@@ -2,7 +2,13 @@
 """sharing app_views Blueprint"""
 
 from flask import Blueprint
+
+# Import Flask before creating the blueprint
+from flask import Flask
+
+# Import other views after Flask if necessary
 from api.v1.views.index import *
 from api.v1.views.states import *
 
+# Create the blueprint after importing Flask
 app_views = Blueprint('app_views', __name__, url_prefix="/api/v1")
