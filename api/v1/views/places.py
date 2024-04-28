@@ -24,7 +24,7 @@ def places(city_id):
 
 
 @app_views.route("/places/<place_id>", strict_slashes=False, methods=["GET"])
-def get_place(place_id):
+def places_get(place_id):
     """Retrieves a City object"""
     place = storage.get(Place, place_id)
     if place is None:
@@ -34,7 +34,7 @@ def get_place(place_id):
 
 @app_views.route("/places/<place_id>", strict_slashes=False,
                  methods=["DELETE"])
-def place_delete(place_id):
+def places_delete(place_id):
     """delete method"""
     obj = storage.get(Place, place_id)
     if obj is None:
@@ -46,7 +46,7 @@ def place_delete(place_id):
 
 @app_views.route("/cities/<city_id>/places", strict_slashes=False,
                  methods=["POST"])
-def create_place(city_id):
+def places_create(city_id):
     """create a new post req"""
     city = storage.get(City, city_id)
     if city is None:
@@ -67,7 +67,7 @@ def create_place(city_id):
 
 
 @app_views.route("/places/<place_id>", strict_slashes=False, methods=["PUT"])
-def update_placey(place_id):
+def places_update(place_id):
     """update place"""
     place = storage.get(Place, place_id)
     if place is None:

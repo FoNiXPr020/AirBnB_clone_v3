@@ -25,7 +25,7 @@ def reviews(place_id):
 
 
 @app_views.route("/reviews/<review_id>", strict_slashes=False, methods=["GET"])
-def get_review(review_id):
+def reviews_get(review_id):
     """Retrieves a review object"""
     review = storage.get(Review, review_id)
     if review is None:
@@ -35,7 +35,7 @@ def get_review(review_id):
 
 @app_views.route("/reviews/<review_id>", strict_slashes=False,
                  methods=["DELETE"])
-def review_delete(review_id):
+def reviews_delete(review_id):
     """delete method"""
     obj = storage.get(Review, review_id)
     if obj is None:
@@ -47,7 +47,7 @@ def review_delete(review_id):
 
 @app_views.route("/places/<place_id>/reviews", strict_slashes=False,
                  methods=["POST"])
-def create_review(place_id):
+def reviews_create(place_id):
     """create a new post req"""
     place = storage.get(Place, place_id)
     if place is None:
@@ -68,7 +68,7 @@ def create_review(place_id):
 
 
 @app_views.route("/reviews/<review_id>", strict_slashes=False, methods=["PUT"])
-def update_review(review_id):
+def reviews_update(review_id):
     """update review"""
     review = storage.get(Review, review_id)
     if review is None:

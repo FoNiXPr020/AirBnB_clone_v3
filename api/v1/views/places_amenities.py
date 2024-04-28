@@ -12,7 +12,7 @@ db_mode = os.getenv("HBNB_TYPE_STORAGE")
 
 @app_views.route("/places/<place_id>/amenities", strict_slashes=False,
                  methods=["GET"])
-def place_amenities(place_id):
+def amenities_place(place_id):
     """retrieve place amenities"""
     amenities_list = []
     place = storage.get(Place, place_id)
@@ -31,7 +31,7 @@ def place_amenities(place_id):
 @app_views.route("/places/<place_id>/amenities/<amenity_id>",
                  strict_slashes=False,
                  methods=["DELETE"])
-def delete_amenity(place_id, amenity_id):
+def amenities_delete(place_id, amenity_id):
     """deleye an amenity my id"""
     place = storage.get(Place, place_id)
     if not place:
@@ -56,7 +56,7 @@ def delete_amenity(place_id, amenity_id):
 @app_views.route("places/<place_id>/amenities/<amenity_id>",
                  strict_slashes=False,
                  methods=["POST"])
-def link_amenity(place_id, amenity_id):
+def amenities_link(place_id, amenity_id):
     """Link Amenity to a Place"""
     place = storage.get(Place, place_id)
     if not place:

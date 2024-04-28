@@ -32,7 +32,7 @@ def cities_id(city_id):
 
 
 @app_views.route("/cities/<city_id>", strict_slashes=False, methods=["DELETE"])
-def city_delete(city_id):
+def cities_delete(city_id):
     """delete method"""
     obj = storage.get(City, city_id)
     if obj is None:
@@ -44,7 +44,7 @@ def city_delete(city_id):
 
 @app_views.route("/states/<state_id>/cities", strict_slashes=False,
                  methods=["POST"])
-def create_city(state_id):
+def cities_create(state_id):
     """create a new post req"""
     state = storage.get(State, state_id)
     if state is None:
@@ -60,7 +60,7 @@ def create_city(state_id):
 
 
 @app_views.route("/cities/<city_id>", strict_slashes=False, methods=["PUT"])
-def update_city(city_id):
+def cities_update(city_id):
     """update city"""
     obj = storage.get(City, city_id)
     if obj is None:

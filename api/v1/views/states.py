@@ -37,7 +37,7 @@ def states_delete(state_id):
 
 
 @app_views.route("/states", strict_slashes=False, methods=["POST"])
-def create_state():
+def states_create():
     """create a new post req"""
     data = request.get_json(force=True, silent=True)
     if not data:
@@ -50,7 +50,7 @@ def create_state():
 
 
 @app_views.route("/states/<state_id>", strict_slashes=False, methods=["PUT"])
-def update_state(state_id):
+def states_update(state_id):
     """update state"""
     obj = storage.get(State, state_id)
     if obj is None:
