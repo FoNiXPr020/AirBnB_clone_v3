@@ -7,16 +7,13 @@ from models.state import State
 from flask import abort, request, jsonify
 
 
-@app_views.route("/states", strict_slashes=False, methods=["GET", "POST", "DELETE"])
+@app_views.route("/states", strict_slashes=False, methods=["GET", "POST"])
 @app_views.route("/states/<state_id>", strict_slashes=False, methods=["GET", "PUT", "DELETE"])
 def states(state_id=None):
     """show states and states with id"""
-    states_list = []
     if state_id is None:
         all_objs = storage.all(State).values()
-        for v in all_objs:
-            states_list.append(v.to_dict())
-        return jsonify(states_list)
+        return jsonify([v.to_dict() for v in all_objs])
 
     obj = storage.get(State, state_id)
     if obj is None:
@@ -34,7 +31,11 @@ def states(state_id=None):
         data = request.get_json(force=True, silent=True)
         if not data:
             abort(400, "Not a JSON")
-        obj.name = data.get("name", obj.name)
+        if "name" not in data:
+            abort(400, "Missing name")
+        for k, v in data.items():
+            if k not in ["id", "created_at", "updated_at"]:
+                setattr(obj, k, v)
         obj.save()
         return jsonify(obj.to_dict()), 200
 
@@ -47,4 +48,3 @@ def states(state_id=None):
         new_state = State(**data)
         new_state.save()
         return jsonify(new_state.to_dict()), 201
-
