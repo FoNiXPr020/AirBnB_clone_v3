@@ -38,23 +38,25 @@ def create_state():
 
 @app_views.route("/states/<state_id>", strict_slashes=False,
                  methods=["PUT", "DELETE"])
-def states_methods(state_id):
-    """Handles DELETE, PUT default RESTFul API actions"""
+def states_delete(state_id):
+    """Handles DELETE default RESTFul API actions"""
     obj = storage.get(State, state_id)
+    if obj is None:
+        abort(404)
+    storage.delete(obj)
+    storage.save()
+    return jsonify({}), 200
 
-    if request.method == "PUT":
-        if obj is None:
-            abort(404)
-        data = request.get_json(force=True, silent=True)
-        if not data:
-            abort(400, "Not a JSON")
-        obj.name = data.get("name", obj.name)
-        obj.save()
-        return jsonify(obj.to_dict()), 200
-
-    if request.method == "DELETE":
-        if obj is None:
-            abort(404)
-        storage.delete(obj)
-        storage.save()
-        return jsonify({}), 200
+@app_views.route("/states/<state_id>", strict_slashes=False,
+                 methods=["PUT"])
+def states_put(state_id):
+    """Handles PUT default RESTFul API actions"""
+    obj = storage.get(State, state_id)
+    if obj is None:
+        abort(404)
+    data = request.get_json(force=True, silent=True)
+    if not data:
+        abort(400, "Not a JSON")
+    obj.name = data.get("name", obj.name)
+    obj.save()
+    return jsonify(obj.to_dict()), 200
