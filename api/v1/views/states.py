@@ -7,8 +7,8 @@ from models.state import State
 from flask import abort, request, jsonify
 
 
-@app_views.route("/states", methods=["GET"])
-@app_views.route("/states/<state_id>", methods=["GET"])
+@app_views.route("/states", strict_slashes=False, methods=["GET"])
+@app_views.route("/states/<state_id>", strict_slashes=False, methods=["GET"])
 def states(state_id=None):
     """show states and states with id"""
     states_list = []
@@ -24,7 +24,8 @@ def states(state_id=None):
         return jsonify(result.to_dict())
 
 
-@app_views.route("/states/<state_id>", methods=["DELETE"])
+@app_views.route("/states/<state_id>", strict_slashes=False,
+                 methods=["DELETE"])
 def states_delete(state_id):
     """delete method"""
     obj = storage.get(State, state_id)
@@ -35,7 +36,7 @@ def states_delete(state_id):
     return jsonify({}), 200
 
 
-@app_views.route("/states", methods=["POST"])
+@app_views.route("/states", strict_slashes=False, methods=["POST"])
 def states_create():
     """create a new post req"""
     data = request.get_json(force=True, silent=True)
@@ -48,7 +49,7 @@ def states_create():
     return jsonify(new_state.to_dict()), 201
 
 
-@app_views.route("/states/<state_id>", methods=["PUT"])
+@app_views.route("/states/<state_id>", strict_slashes=False, methods=["PUT"])
 def states_update(state_id):
     """update state"""
     obj = storage.get(State, state_id)
