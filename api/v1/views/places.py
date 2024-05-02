@@ -13,7 +13,7 @@ from flask import abort, request, jsonify
 
 @app_views.route("/cities/<city_id>/places", strict_slashes=False,
                  methods=["GET"])
-def places(city_id):
+def cities(city_id):
     """show places"""
     places_list = []
     city = storage.get(City, city_id)
@@ -26,7 +26,7 @@ def places(city_id):
 
 
 @app_views.route("/places/<place_id>", strict_slashes=False, methods=["GET"])
-def places_get(place_id):
+def places(place_id):
     """Retrieves a City object"""
     place = storage.get(Place, place_id)
     if place is None:
