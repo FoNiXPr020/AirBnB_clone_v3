@@ -61,6 +61,6 @@ def post_place_amenity(place_id, amenity_id):
     else:
         place_amenities = place.amenity_ids
     if amenity in place_amenities:
-        return jsonify(amenity.to_dict()), 200
+        return jsonify(amenity.to_dict(), 200)
     place_amenities.append(amenity)
-    return jsonify(place_amenities.to_dict()), 201
+    return jsonify(place_amenities.to_dict(), 201)
