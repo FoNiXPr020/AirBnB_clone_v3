@@ -25,13 +25,6 @@ def amenities_place(place_id):
             amenities_list = place.amenity_ids
         return jsonify(amenities_list)
     elif request.method == "POST":
-        # Link a Amenity object to a Place:
-        # POST /api/v1/places/<place_id>/amenities/<amenity_id>
-        # No HTTP body needed
-        # If the place_id is not linked to any Place object, raise a 404 error
-        # If the amenity_id is not linked to any Amenity object, raise a 404 error
-        # If the Amenity is already linked to the Place, return the Amenity with the status code 200
-        # Returns the Amenity with the status code 201
         amenity_id = request.get_json()["amenity_id"]
         amenity = storage.get(Amenity, amenity_id)
         if not amenity:
@@ -43,12 +36,6 @@ def amenities_place(place_id):
             storage.save()
             return jsonify(amenity.to_dict(), 201)
     elif request.method == "DELETE":
-        # Deleye an amenity my id
-        # DELETE /api/v1/places/<place_id>/amenities/<amenity_id>
-        # If the place_id is not linked to any Place object, raise a 404 error
-        # If the amenity_id is not linked to any Amenity object, raise a 404 error
-        # If the Amenity is not linked to the Place before the request, raise a 404 error
-        # Returns an empty dictionary with the status code 200
         amenity_id = request.get_json()["amenity_id"]
         amenity = storage.get(Amenity, amenity_id)
         if not amenity:
