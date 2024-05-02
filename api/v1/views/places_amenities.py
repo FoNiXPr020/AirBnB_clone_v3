@@ -7,14 +7,12 @@ from models.amenity import Amenity
 from models.place import Place
 from flask import abort, request, jsonify
 
-db_mode = os.getenv("HBNB_TYPE_STORAGE")
-
 
 @app_views.route('/places/<string:place_id>/amenities', methods=['GET'],
                  strict_slashes=False)
 def get_places_amenities(place_id):
     """get amenity information for a specified place"""
-    place = storage.get("Place", place_id)
+    place = storage.get(Place, place_id)
     if place is None:
         abort(404)
     amenities = []
