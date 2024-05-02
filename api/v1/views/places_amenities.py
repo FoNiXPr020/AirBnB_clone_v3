@@ -49,7 +49,7 @@ def places_amenities_delete(place_id, amenity_id):
 @app_views.route('/places/<place_id>/amenities/<amenity_id>',
                  methods=['POST'], strict_slashes=False)
 def post_place_amenity(place_id, amenity_id):
-    """Link Amenity to a Place"""
+    """Link a Amenity to a Place"""
     place = storage.get(Place, place_id)
     if not place:
         abort(404)
@@ -57,10 +57,15 @@ def post_place_amenity(place_id, amenity_id):
     if not amenity:
         abort(404)
     if os.getenv('HBNB_TYPE_STORAGE') == 'db':
-        place_amenities = place.amenities
+        if amenity in place.amenities:
+            return jsonify(amenity.to_dict()), 200
+        else:
+            place.amenities.append(amenity)
     else:
-        place_amenities = place.amenity_ids
-    if amenity in place_amenities:
-        return jsonify(amenity.to_dict(), 200)
-    place_amenities.append(amenity)
-    return jsonify(place_amenities.to_dict(), 201)
+        if amenity_id in place.amenity_ids:
+            return jsonify(amenity.to_dict()), 200
+        else:
+            place.amenity_ids.append(amenity_id)
+
+    storage.save()
+    return jsonify(amenity.to_dict(), 201)
