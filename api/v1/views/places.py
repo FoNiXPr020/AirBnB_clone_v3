@@ -48,7 +48,7 @@ def places_delete(place_id):
 
 @app_views.route("/cities/<city_id>/places", strict_slashes=False,
                  methods=["POST"])
-def places_create(city_id):
+def cities_places_create(city_id):
     """create a new POST request """
     city = storage.get(City, city_id)
     if city is None:
