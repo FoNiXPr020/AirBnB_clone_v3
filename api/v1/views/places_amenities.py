@@ -22,7 +22,7 @@ def get_places_amenities(place_id):
         amenity_objects = place.amenity_ids
     for amenity in amenity_objects:
         amenities.append(amenity.to_dict())
-    return jsonify(amenities)
+    return jsonify(amenities.to_dict())
 
 
 @app_views.route('/places/<string:place_id>/amenities/<string:amenity_id>',
