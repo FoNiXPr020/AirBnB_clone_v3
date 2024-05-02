@@ -6,14 +6,12 @@ from models import storage
 from models.place import Place
 from models.city import City
 from models.user import User
-from models.amenity import Amenity
-from models.state import State
 from flask import abort, request, jsonify
 
 
 @app_views.route("/cities/<city_id>/places", strict_slashes=False,
                  methods=["GET"])
-def cities(city_id):
+def places(city_id):
     """show places"""
     places_list = []
     city = storage.get(City, city_id)
@@ -26,7 +24,7 @@ def cities(city_id):
 
 
 @app_views.route("/places/<place_id>", strict_slashes=False, methods=["GET"])
-def places(place_id):
+def places_get(place_id):
     """Retrieves a City object"""
     place = storage.get(Place, place_id)
     if place is None:
@@ -37,7 +35,7 @@ def places(place_id):
 @app_views.route("/places/<place_id>", strict_slashes=False,
                  methods=["DELETE"])
 def places_delete(place_id):
-    """delete a data request"""
+    """delete method"""
     obj = storage.get(Place, place_id)
     if obj is None:
         abort(404)
@@ -48,8 +46,8 @@ def places_delete(place_id):
 
 @app_views.route("/cities/<city_id>/places", strict_slashes=False,
                  methods=["POST"])
-def cities_places_create(city_id):
-    """create a new POST request """
+def places_create(city_id):
+    """create a new post req"""
     city = storage.get(City, city_id)
     if city is None:
         abort(404)
@@ -68,9 +66,9 @@ def cities_places_create(city_id):
     return jsonify(new_place.to_dict()), 201
 
 
-@app_views.route("/places/<place_id>", methods=["PUT"], strict_slashes=False)
+@app_views.route("/places/<place_id>", strict_slashes=False, methods=["PUT"])
 def places_update(place_id):
-    """update a data request"""
+    """update place"""
     place = storage.get(Place, place_id)
     if place is None:
         abort(404)
