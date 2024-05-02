@@ -1,13 +1,9 @@
 #!/usr/bin/python3
-"""State objects that handles all default RESTFul API actions"""
-import os
-from api.v1.views import app_views
-from models import storage
-from models.amenity import Amenity
-from models.place import Place
-from flask import abort, request, jsonify
 
-db_mode = os.getenv("HBNB_TYPE_STORAGE")
+from api.v1.models import storage
+from api.v1.models.place import Place
+from api.v1.models.amenity import Amenity
+from flask import abort, request, jsonify
 
 
 @app_views.route('/places/<string:place_id>/amenities', methods=['GET'],
@@ -31,10 +27,10 @@ def get_places_amenities(place_id):
                  methods=['DELETE'], strict_slashes=False)
 def places_amenities_delete(place_id, amenity_id):
     """deletes an amenity object from a place"""
-    place = storage.get(Place, place_id)
+    place = storage.get("Place", place_id)
     if not place:
         abort(404)
-    amenity = storage.get(Amenity, amenity_id)
+    amenity = storage.get("Amenity", amenity_id)
     if not amenity:
         abort(404)
     if os.getenv('HBNB_TYPE_STORAGE') == 'db':
@@ -51,12 +47,10 @@ def places_amenities_delete(place_id, amenity_id):
 @app_views.route('/places/<string:place_id>/amenities/<string:amenity_id>',
                  methods=['POST'], strict_slashes=False)
 def post_place_amenity(place_id, amenity_id):
-    """Link Amenity to a Place"""
-    place = storage.get(Place, place_id)
-    if not place:
-        abort(404)
-    amenity = storage.get(Amenity, amenity_id)
-    if not amenity:
+    """adds an amenity object to a place"""
+    place = storage.get("Place", place_id)
+    amenity = storage.get("Amenity", amenity_id)
+    if place is None or amenity is None:
         abort(404)
     if os.getenv('HBNB_TYPE_STORAGE') == 'db':
         place_amenities = place.amenities
