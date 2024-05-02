@@ -95,59 +95,60 @@ def places_update(place_id):
 @app_views.route('/places_search', methods=['POST'], strict_slashes=False)
 def search():
     """
-    Retrieves all Place objects depending of the JSON in the body
-    of the request
+    Returns all Places that match the parameters in the
+    JSON body of the request.
     """
 
     if request.get_json() is None:
         abort(400, description="Not a JSON")
 
-    data = request.get_json()
+    fromDB = request.get_json()
 
-    if data and len(data):
-        states = data.get('states', None)
-        cities = data.get('cities', None)
-        amenities = data.get('amenities', None)
+    if fromDB and len(fromDB):
+        states = fromDB.get('states', None)
+        cities = fromDB.get('cities', None)
+        amenities = fromDB.get('amenities', None)
 
-    if not data or not len(data) or (
+    if not fromDB or not len(fromDB) or (
             not states and
             not cities and
             not amenities):
-        iPlaces = storage.all(Place).values()
-        lPlaces = []
-        for place in iPlaces:
-            lPlaces.append(place.to_dict())
-        return jsonify(lPlaces)
+        places = storage.all(Place).values()
+        places_list = []
+        for place in places:
+            places_list.append(place.to_dict())
+        return jsonify(places_list)
 
-    lPlaces = []
+    places_list = []
     if states:
-        states_obj = [storage.get(State, s_id) for s_id in states]
-        for state in states_obj:
+        obj_states = [storage.get(State, s_id) for s_id in states]
+        for state in obj_states:
             if state:
-                for gCity in state.cities:
-                    if gCity:
-                        for place in gCity.places:
-                            lPlaces.append(place)
+                for city in state.cities:
+                    if city:
+                        for place in city.places:
+                            places_list.append(place)
 
     if cities:
-        city_obj = [storage.get(City, c_id) for c_id in cities]
-        for city in city_obj:
+        obj_city = [storage.get(City, c_id) for c_id in cities]
+        for city in obj_city:
             if city:
                 for place in city.places:
-                    if place not in lPlaces:
-                        lPlaces.append(place)
+                    if place not in places_list:
+                        places_list.append(place)
 
     if amenities:
-        if not lPlaces:
-            iPlaces = storage.all(Place).values()
-        obj = [storage.get(Amenity, a_id) for a_id in amenities]
-        lPlaces = [place for place in iPlaces
-                   if all(am in place.amenities
-                          for am in obj)]
+        if not places_list:
+            places_list = storage.all(Place).values()
+        obj_amenities = [storage.get(Amenity, a_id) for a_id in amenities]
+        places_list = [place for place in places_list
+                       if all([am in place.amenities
+                               for am in obj_amenities])]
 
-    iPlaces = [place.to_dict() for place in lPlaces]
+    places = []
+    for p in places_list:
+        d = p.to_dict()
+        d.pop('amenities', None)
+        places.append(d)
 
-    for p in iPlaces:
-        p.pop('amenities', None)
-
-    return jsonify(iPlaces)
+    return jsonify(places)
