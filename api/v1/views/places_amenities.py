@@ -41,7 +41,7 @@ def places_amenities_delete(place_id, amenity_id):
         place_amenities = place.amenity_ids
     if amenity not in place_amenities:
         abort(404)
-    place_amenities.delete(amenity)
+    place_amenities.remove(amenity)
     place.save()
     return jsonify({}, 200)
 
