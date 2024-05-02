@@ -88,3 +88,19 @@ def places_update(place_id):
     place.longitude = data.get("longitude", place.longitude)
     place.save()
     return jsonify(place.to_dict()), 200
+
+
+@app_views.route("/places_search", methods=["POST"], strict_slashes=False)
+def places_search():
+    """List places"""
+    data = request.get_json(force=True, silent=True)
+    if not data:
+        abort(400, "Not a JSON")
+    q = storage.all(Place)
+    if "states" in data:
+        q = [p for p in q if p.city.state_id in data["states"]]
+    if "cities" in data:
+        q = [p for p in q if p.city_id in data["cities"]]
+    if "amenities" in data:
+        q = [p for p in q if set(data["amenities"]).issubset(p.amenity_ids)]
+    return jsonify([place.to_dict() for place in q]), 200
