@@ -1,10 +1,8 @@
 #!/usr/bin/python3
-"""State objects that handles all default RESTFul API actions"""
-import os
-from api.v1.views import app_views
-from models import storage
-from models.amenity import Amenity
-from models.place import Place
+
+from api.v1.models import storage
+from api.v1.models.place import Place
+from api.v1.models.amenity import Amenity
 from flask import abort, request, jsonify
 
 
@@ -57,7 +55,7 @@ def post_place_amenity(place_id, amenity_id):
     else:
         place_amenities = place.amenity_ids
     if amenity in place_amenities:
-        return jsonify(amenity.to_dict())
+        return jsonify(amenity.to_dict()), 200
     place_amenities.append(amenity)
     place.save()
     return jsonify(place_amenities, 201)
