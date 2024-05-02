@@ -127,6 +127,19 @@ TestBaseModel class:
 * `def test_user_class_docstring(self)` - Test for the User class docstring
 
 
+##### Added API system
+In addition to the command line interface, I have also implemented a simple RESTful API. The API allows you to perform CRUD operations on any class that inherits from BaseModel. The API is built using Flask and uses JSON serialization.
+
+The API is mounted on the route `/api/v1/<classname>`. The classname should be in plural and in lowercase.
+
+The API supports the following HTTP methods:
+* `GET` - Retrieve list of instances of a class or retrieve a specific instance
+* `POST` - Create a new instance of a class
+* `PUT` - Update an existing instance of a class
+* `DELETE` - Delete an existing instance of a class
+
+The API returns a JSON response with a dataclass named `classname`:
+
 ## Examples of use
 ```
 vagrantAirBnB_clone$./console.py
