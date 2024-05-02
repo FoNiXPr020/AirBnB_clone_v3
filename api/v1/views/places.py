@@ -44,36 +44,47 @@ def places_delete(place_id):
     return jsonify({}), 200
 
 
-
-
-@app_views.route("/places_search", strict_slashes=False, methods=["POST"])
-def places_search():
-    """retrieve Place objects from a JSON body"""
+@app_views.route("/cities/<city_id>/places", strict_slashes=False,
+                 methods=["POST"])
+def places_create(city_id):
+    """create a new POST request """
+    city = storage.get(City, city_id)
+    if city is None:
+        abort(404)
     data = request.get_json(force=True, silent=True)
     if not data:
         abort(400, "Not a JSON")
-    states = data.get("states", [])
-    cities = data.get("cities", [])
-    amenities = data.get("amenities", [])
-    if not states and not cities:
-        places = storage.all(Place)
-    else:
-        places = []
-        for city in storage.all(City):
-            if city.state_id in states or city.id in cities:
-                places.extend(city.places)
-        places = list(set(places))
-    if amenities:
-        places_with_amenities = []
-        for place in places:
-            for amenity in place.amenities:
-                if amenity.id in amenities:
-                    places_with_amenities.append(place)
-                    break
-        places = places_with_amenities
-    places_list = []
-    for place in places:
-        places_list.append(place.to_dict())
-    return jsonify(places_list)
+    if "user_id" not in data:
+        abort(400, "Missing user_id")
+    user = storage.get(User, data["user_id"])
+    if user is None:
+        abort(404)
+    if "name" not in data:
+        abort(400, "Missing name")
+    new_place = Place(city_id=city.id, **data)
+    new_place.save()
+    return jsonify(new_place.to_dict()), 201
 
+
+@app_views.route("/places/<place_id>", strict_slashes=False, methods=["PUT"])
+def places_update(place_id):
+    """update a data request"""
+    place = storage.get(Place, place_id)
+    if place is None:
+        abort(404)
+    data = request.get_json(force=True, silent=True)
+    if not data:
+        abort(400, "Not a JSON")
+    place.name = data.get("name", place.name)
+    place.description = data.get("description",
+                                 place.description)
+    place.number_rooms = data.get("number_rooms",
+                                  place.number_rooms)
+    place.number_bathrooms = data.get("number_bathrooms",
+                                      place.number_bathrooms)
+    place.max_guest = data.get("max_guest", place.max_guest)
+    place.price_by_night = data.get("price_by_night", place.price_by_night)
+    place.latitude = data.get("latitude", place.latitude)
+    place.longitude = data.get("longitude", place.longitude)
+    place.save()
     return jsonify(place.to_dict()), 200
