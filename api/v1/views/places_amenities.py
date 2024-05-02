@@ -46,15 +46,16 @@ def places_amenities_delete(place_id, amenity_id):
     return jsonify({}, 200)
 
 
-@app_views.route('/places/<string:place_id>/amenities/<string:amenity_id>',
+@app_views.route('/api/v1/places/{place_id}/amenities/{amenity_id}'.format(
+    place_id='<string:place_id>', amenity_id='<string:amenity_id>'),
                  methods=['POST'], strict_slashes=False)
 def post_place_amenity(place_id, amenity_id):
     """Link Amenity to a Place"""
     place = storage.get(Place, place_id)
-    if not place:
+    if place is None:
         abort(404)
     amenity = storage.get(Amenity, amenity_id)
-    if not amenity:
+    if amenity is None:
         abort(404)
     if os.getenv('HBNB_TYPE_STORAGE') == 'db':
         place_amenities = place.amenities
@@ -64,4 +65,4 @@ def post_place_amenity(place_id, amenity_id):
         return jsonify(amenity.to_dict()), 200
     place_amenities.append(amenity)
     place.save()
-    return jsonify(place_amenities, 201)
+    return jsonify(amenity.to_dict()), 201
